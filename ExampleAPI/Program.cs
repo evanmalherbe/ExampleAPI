@@ -1,5 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+// 1. Add CORS services to the container
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7079", // Your local Web App URL
+                                              "https://www.yourapp.com") // Your deployed Web App URL
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -18,6 +31,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+if (app.Environment.IsDevelopment())
+{
+    // Use a very permissive policy ONLY in development
+    app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+}
+else
+{
+    // Use the restrictive named policy in production/staging
+    app.UseCors(MyAllowSpecificOrigins);
+}
 app.UseAuthorization();
 
 app.MapControllers();
