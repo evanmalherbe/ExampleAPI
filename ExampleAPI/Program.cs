@@ -8,7 +8,7 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins("https://localhost:7079", // Your local Web App URL
-                                              "https://www.yourapp.com") // Your deployed Web App URL
+                                              "https://exampleapp-bneadsa3dudah4bb.southafricanorth-01.azurewebsites.net") // Your deployed Web App URL
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
